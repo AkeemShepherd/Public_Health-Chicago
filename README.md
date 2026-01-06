@@ -7,8 +7,7 @@ Last updated: January 6, 2026
 
 Overview
 
-This repo contains trends related to all forms of violence reported by the city of Chicago VR datasets. The repo aims to 
-explore and discribe trends for the Researcher and audience to gain an overall understanding of shooting reductions in Chicago.
+This repo's code intends to explore trends on crimes, violence, violence reduction, homicides, and shootings reported by the Chicago Police Department. These trends represent homicide data from 1991 to current and Non-fatal shooting data from 2010 to current.
 
 ##Data
 The following data files are needed to run scripts in this repo:
