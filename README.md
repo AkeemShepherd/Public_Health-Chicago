@@ -1,11 +1,12 @@
 # Public_Health-Chicago
 Repo Template
 Repo Manager: Akeem Shepherd
+
 Last updated: January 6, 2026
 
 
 Overview
-Give a brief overview and the purpose of this repo. Please give as much background detail here as possible.
+
 This repo contains trends related to all forms of violence reported by the city of Chicago VR datasets. The repo aims to 
 explore and discribe trends for the Researcher and audience to gain an overall understanding of shooting reductions in Chicago.
 
@@ -13,6 +14,7 @@ explore and discribe trends for the Researcher and audience to gain an overall u
 The following data files are needed to run scripts in this repo:
 
 name of dataset1
+
 name of dataset2
 
 How to Use this Repo
