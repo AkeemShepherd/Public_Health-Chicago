@@ -1,23 +1,20 @@
 # Public_Health-Chicago
 Repo Template
-Repo Manager: Kelley Sarussi (replace with your name)
-Last updated: January 12, 2024
+Repo Manager: Akeem Shepherd
+Last updated: January 6, 2026
 
-IMPORTANT: (remove this "Important" section from your readme)
 
-Before creating a new repo, please review the [coding guidebook TBD](sharepoint location for coding guidebook). It contains helpful instructions needed to create and maintain reproducible code necessary for collaboration. This repo is a template that is used to create new repos in the CORNERS GitHub organization. It includes:
-
-a README template in raw Markdown,
-.gitignore file that should prevent data files and other unnecessary files from being pushed to a repo
-configuration files for virtual environments and GitHub Actions workflows
 Overview
 Give a brief overview and the purpose of this repo. Please give as much background detail here as possible.
+This repo contains trends related to all forms of violence reported by the city of Chicago VR datasets. The repo aims to 
+explore and discribe trends for the Researcher and audience to gain an overall understanding of shooting reductions in Chicago.
 
-Data
+##Data
 The following data files are needed to run scripts in this repo:
 
 name of dataset1
 name of dataset2
+
 How to Use this Repo
 Explain as if someone is seeing this repo and running your code for the first time. For example, note here if you just need to run main.R to run all other scripts. Give instructions if not all files need to be run for certain analyses.
 
