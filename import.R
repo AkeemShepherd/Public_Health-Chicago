@@ -1,1 +1,3 @@
-shd shdh
+list.files()
+read.csv()
+getwd()
