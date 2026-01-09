@@ -16,7 +16,7 @@ vr_data <- data %>%
     # Again, for viz purposes, create a generic date of the first of the month
     # for each shooting (this is what we group_by later to summarize/count
     # by CCA)
-    month_year = floor_date(as_date(date), "month")
+    month_year = floor_date(as_date(date), "month") # generic date threw an error
   ) %>%
   # Note - for this analysis (and consistent with previous analyses we've done
   # using the VR dashboard dataset, just grab the GV records)

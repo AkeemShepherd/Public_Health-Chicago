@@ -4,4 +4,5 @@ library("tidyverse")
 library("sf")
 #install.packages("janitor")
 library("janitor")
-
+install.packages("mapview")
+library("mapview")
