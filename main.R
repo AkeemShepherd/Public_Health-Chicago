@@ -1,6 +1,7 @@
 # load packages
 renv::activate()
 
+library(shiny)
 library(tidyverse)
 library(sf)
 library(st)
