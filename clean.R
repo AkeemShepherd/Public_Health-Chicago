@@ -20,16 +20,18 @@ vr_data <- data %>%
   ) %>%
   # Note - for this analysis (and consistent with previous analyses we've done
   # using the VR dashboard dataset, just grab the GV records)
-  filter(gunshot_injury_i == "YES") %>%
+  filter(gunshot_injury_i == "YES") %T>%
   # Because we want to be able to map incidents, drop any where latitude
   # is na. The number of dropped observations is 4 as of 1/7/2025
-  walk(print(nrow(.))) %>% 
+  {print(nrow(.))} %>% 
   drop_na(latitude) %>%
-  st_as_sf(coords = c("longitude", "latitude"), crs = 4326) %>%
+  st_as_sf(coords = c("longitude", "latitude"), crs = 4326) %T>% 
+  {print(nrow(.))} %>%
   # Deduplicate (drops 0 records as of 1/7/2025)
   distinct(case_number, unique_id, .keep_all = TRUE) %>% 
-  walk(print(nrow(.))) %>% 
-  st_transform(3435)
+  # Reproject to Chicago area coordinates for consistent analysis
+  st_transform(3435) %T>% 
+  {print(nrow(.))}
 
-
+# What makes this
 write.csv(vr_data, "~/Documents/GitHub_personal/data/vr_data.csv", row.names = FALSE)
