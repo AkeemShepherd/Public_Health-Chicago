@@ -1,30 +1,33 @@
 # Violence Reduction Chicago
 
-### Repo Manager: Akeem Shepherd
+**Repo Manager:** Akeem Shepherd
 
-### Last updated: January 6, 2026
+**Last updated:** January 6, 2026
 
 
 
 ## Overview
-
-This repo's code intends to explore trends on crimes, violence, violence reduction, homicides, and shootings reported by the Chicago Police Department. These trends represent homicide data from 1991 to current and Non-fatal shooting data from 2010 to current.
+> 
+> This repo's code intends to explore trends on crimes, violence, violence reduction, homicides, and shootings reported by the Chicago Police Department. These trends represent homicide data from 1991 to current and Non-fatal shooting data from 2010 to current.
 
 ## Data 
-The following data files are needed to run scripts in this repo:
+> The following data files are needed to run scripts in this repo:
+> 
+> **Raw dataset**
+> 
+> - Violence_Reduction_-_Victims_of_Homicides_and_Non-Fatal_Shootings_20260106.csv
 
-#### Raw dataset 
-Violence_Reduction_-_Victims_of_Homicides_and_Non-Fatal_Shootings_20260106.csv
-
-#### Spatial dataset 
-vr_data.csv
+> **Spatial dataset**
+> 
+> - vr_data.csv
 
 
 ## How to Use this Repo
-Thus far, the frist goal of this repo is to create a spatial visualization of shootings in Chicago for year 2021.
-To sccessfully go so, first run the r.script "main", that contains all the necessary packages for cleaning and visualizing those trends. 
-Then run the r.script "import" to import the raw dataset. Use the r.script "clean" to reconstruct the raw dataset into the vr_data.csv file, which 
-is used to run the r.script "figure" to produce the spatial visualization. 
+> Thus far, the frist goal of this repo is to create a spatial visualization of shootings in Chicago for year 2021.
+> 
+>> To sccessfully do so, first run the **r.script "main"**, that contains all the necessary packages for cleaning and visualizing those trends. 
+Then run the **r.script "import"** to import the raw dataset. Use the **r.script "clean"** to reconstruct the raw dataset into the **vr_data.csv** file, which 
+is used to run the **r.script "figure"** to produce the spatial visualization. 
 
 
 ## Table of Contents
