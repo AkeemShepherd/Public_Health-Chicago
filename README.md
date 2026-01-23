@@ -8,7 +8,7 @@
 
 ## Overview 
 > 
-> This repo's code intends to explore trends on crimes, violence, violence reduction, homicides, and shootings made public by the City of Chicago. These data represent the following from 1991 to current and Non-fatal shooting data from 2010 to current.
+> This repo's code intends to explore trends on shooting incidents made public by the City of Chicago. These data represent the following from 1991 to 2026.
 
 ## Data 📊
 > The following data files are needed to run scripts in this repo:
