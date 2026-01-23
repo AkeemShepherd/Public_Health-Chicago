@@ -32,14 +32,14 @@ is used to run the **r.script ["figure"](https://github.com/AkeemShepherd/Public
 
 ## Table of Contents
 
-Follow the format used below.
+> Follow the format used below.
+> 
+> - README.md: markdown file to describe your project/repo
 
-README.md: markdown file to describe your project/repo
+> - script: primary folder where your code and analyses should be saved. Includes the following R files:
 
-script: primary folder where your code and analyses should be saved. Includes the following R files:
+> - cleaning.R: For data cleaning purposes
 
-cleaning.R: For data cleaning purposes
+> - functions.R: For any functions
 
-functions.R: For any functions
-
-figure: plotting and plotting related data formatting here
+> - figure: plotting and plotting related data formatting here
