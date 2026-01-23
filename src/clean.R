@@ -33,3 +33,10 @@ vr_data <- data %>%
 
 
 write.csv(vr_data, "~/Documents/GitHub_personal/data/vr_data.csv", row.names = FALSE)
+
+
+
+
+
+
+

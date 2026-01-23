@@ -34,3 +34,35 @@ vr_subset <- vr_sf[ # in the vr_sf dataframe column case_number, select all valu
 # plot
 mapview(vr_subset["updated"])
 
+# What have shootings trends been like over the past 10 years? (Have they gone up? Down?) Try one or more of:
+# LINE GRAPH: total citywide shootings for each year from 2016-2025
+# BAR CHART: % change in total shootings for each year over time, using 2015 as the "start" year
+
+# filter the dataset to represent the past 10 years
+data2016_25 <- vr_data[vr_data$case_number >= as.POSIXct("2016-01-01 00:00:00") &
+  vr_data$case_number <= as.POSIXct("2025-12-31 23:59:59"), ]
+
+
+data2016_25$case_number <- substr(data2016_25$case_number, 1, 4) 
+  
+
+line_viz <- data2016_25 %>%
+  mutate(case_number = as.integer(case_number)) %>%   # make year numeric
+  group_by(case_number) %>%
+  summarise(incident_primary = n(), .groups = "drop") %>%
+  arrange(case_number)                            # order by year
+
+ggplot(line_viz, aes(x = case_number, y = incident_primary)) +
+  geom_line() +
+  geom_point() +
+  scale_x_continuous(breaks = line_viz$case_number) +
+  labs(
+    title = "Incidents by Year",
+    x = "",
+    y = "Number of Incidents"
+  ) +
+  theme_minimal()
+
+
+
+
