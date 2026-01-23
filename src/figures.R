@@ -63,6 +63,38 @@ ggplot(line_viz, aes(x = case_number, y = incident_primary)) +
   ) +
   theme_minimal()
 
+# BAR CHART: % change in total shootings for each year over time, using 2015 as the "start" year
+
+data2015_25 <- vr_data[vr_data$case_number >= as.POSIXct("2015-01-01 00:00:00") &
+                         vr_data$case_number <= as.POSIXct("2025-12-31 23:59:59"), ]
+
+data2015_25$case_number <- substr(data2015_25$case_number, 1, 4) 
+
+# Aggregate total incidents by year
+per_chg <- data2015_25 %>%
+  mutate(year = as.integer(case_number)) %>%
+  filter(year >= 2015) %>%    # only 2015 to current
+  group_by(year) %>%
+  summarise(incidents = n(), .groups = "drop") %>%
+  arrange(year) %>%
+  mutate(
+    pct_change = (incidents / lag(incidents) - 1) * 100
+  )
+
+#barchart 
+ggplot(per_chg, aes(x = year, y = pct_change)) +
+  geom_col(fill = "#DF536B") +
+  geom_text(aes(label = round(pct_change, 1)), vjust = -0.5) +  # show percent on top
+  labs(
+    title = "% Change in Shooting Incidents",
+    x = "",
+    y = "%"
+  ) +
+  theme_minimal() +
+  scale_x_continuous(breaks = per_chg$year) +
+  theme(panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.border = element_rect())
 
 
 
