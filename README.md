@@ -6,11 +6,11 @@
 
 
 
-## Overview
+## Overview 
 > 
-> This repo's code intends to explore trends on crimes, violence, violence reduction, homicides, and shootings reported by the Chicago Police Department. These trends represent homicide data from 1991 to current and Non-fatal shooting data from 2010 to current.
+> This repo's code intends to explore trends on crimes, violence, violence reduction, homicides, and shootings made public by the City of Chicago. These data represent the following from 1991 to current and Non-fatal shooting data from 2010 to current.
 
-## Data 
+## Data 📊
 > The following data files are needed to run scripts in this repo:
 > 
 > **Raw dataset**
