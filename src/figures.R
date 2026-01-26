@@ -57,11 +57,12 @@ ggplot(line_viz, aes(x = case_number, y = incident_primary)) +
   geom_point() +
   scale_x_continuous(breaks = line_viz$case_number) +
   labs(
-    title = "Incidents by Year",
+    title = "Total Shooting Incidents",
     x = "",
-    y = "Number of Incidents"
+    y = ""
   ) +
-  theme_minimal()
+  theme_minimal() +
+  theme(panel.grid.minor = element_blank())
 
 # BAR CHART: % change in total shootings for each year over time, using 2015 as the "start" year
 
