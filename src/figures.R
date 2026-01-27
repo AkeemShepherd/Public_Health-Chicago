@@ -1,5 +1,4 @@
-
-
+## <shootings2021>----
 head(vr_data$updated)
 
 vr_data <- vr_data %>%
@@ -36,7 +35,8 @@ mapview(vr_subset["updated"])
 
 # What have shootings trends been like over the past 10 years? (Have they gone up? Down?) Try one or more of:
 # LINE GRAPH: total citywide shootings for each year from 2016-2025
-# BAR CHART: % change in total shootings for each year over time, using 2015 as the "start" year
+
+## <line_graph>----
 
 # filter the dataset to represent the past 10 years
 data2016_25 <- vr_data[vr_data$case_number >= as.POSIXct("2016-01-01 00:00:00") &
@@ -62,8 +62,12 @@ ggplot(line_viz, aes(x = case_number, y = incident_primary)) +
     y = ""
   ) +
   theme_minimal() +
-  theme(panel.grid.minor = element_blank())
+  theme(panel.grid.minor = element_blank(),
+        plot.title = element_text(face = "bold", 
+                                  size = 10, 
+                                  family = "Times New Roman"))
 
+## <bar_graph>----
 # BAR CHART: % change in total shootings for each year over time, using 2015 as the "start" year
 
 data2015_25 <- vr_data[vr_data$case_number >= as.POSIXct("2015-01-01 00:00:00") &
@@ -82,20 +86,57 @@ per_chg <- data2015_25 %>%
     pct_change = (incidents / lag(incidents) - 1) * 100
   )
 
+per_chg <- per_chg %>%
+  filter(year!=2015)
+
 #barchart 
 ggplot(per_chg, aes(x = year, y = pct_change)) +
   geom_col(fill = "#DF536B") +
-  geom_text(aes(label = round(pct_change, 1)), vjust = -0.5) +  # show percent on top
+  geom_text(aes(label = round(pct_change, 1)), vjust = .02, size = 3) +  # show percent on top
   labs(
     title = "% Change in Shooting Incidents",
     x = "",
-    y = "%"
+    y = ""
   ) +
   theme_minimal() +
   scale_x_continuous(breaks = per_chg$year) +
   theme(panel.grid.major = element_blank(),
-        panel.grid.minor = element_blank(),
-        panel.border = element_rect())
+        #panel.grid.minor = element_blank()
+        plot.title = element_text(face = "bold",
+                                  size = 10,
+                                  family = "Times New Roman"))
+
+## <shootings2025byCA>----
+# MAP: of 77 community areas with a gradient fill showing the total number of shootings in 2025
+
+# plot
+ggplot(community_areas_map) +
+  geom_sf(aes(fill = shootings), color = "black", linewidth = 0.2) +
+  scale_fill_gradient(
+    low = "lightyellow",
+    high = "red",
+    name = "0-158"
+  ) +
+  labs(
+    title = "Total Shootings (2025)",
+    subtitle = "Chicago Community Areas",
+    caption = "Source: Violence Reduction Dashboard"
+  ) +
+  theme_minimal()+
+  theme(axis.text.x = element_blank(),
+        axis.text.y = element_blank(),
+        panel.grid = element_blank(),
+        plot.title = element_text(face = "bold",
+                                  size = 12,
+                                  family = "Times New Roman"),
+        plot.subtitle = element_text(face = "bold",
+                                     size = 8,
+                                     family = "Times New Roman"),
+        legend.title = element_text(size = 6,
+                                    face = "italic"),
+        plot.caption = element_text(face = "italic",
+                                    size = 5))
 
 
+# MAP: of 77 community areas with a gradient fill showing the % change in shootings between 2024 and 2025
 
