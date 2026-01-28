@@ -1,4 +1,4 @@
-# Violence Reduction Chicago
+# Violence Reduction Dashboard Data (Chicago)
 
 **Repo Manager:** Akeem Shepherd
 
@@ -8,7 +8,7 @@
 
 ## Overview 
 > 
-> This repo's code intends to explore trends on shooting incidents made public by the City of Chicago. These data represent the following from 1991 to 2026.
+> This repository code intends to explore trends on gun violent incidents made public by the city of Chicago. These data represent the following from years 1991 to 2026.
 
 ## Data 📊
 > The following data files are needed to run scripts in this repo:
