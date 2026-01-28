@@ -25,9 +25,9 @@
 ## How to Use this Repo
 > This repo aims to explore gun violence in Chicago.
 > 
->> To produce outputs, first run the **r.script ["main"](https://github.com/AkeemShepherd/Public_Health-Chicago/blob/dev/src/main.R)**, that contains all the necessary packages to successfully clean and visualize these data trends. 
+>> To produce outputs, first run the **r.script ["main"](https://github.com/AkeemShepherd/Public_Health-Chicago/blob/dev/src/main.R)**, which contains all the necessary packages to successfully clean and visualize these data trends. 
 Then run the **r.script ["import"](https://github.com/AkeemShepherd/Public_Health-Chicago/blob/dev/src/import.R)** to import the raw dataset. Use the **r.script ["clean"](https://github.com/AkeemShepherd/Public_Health-Chicago/blob/dev/src/clean.R)** to reconstruct the raw dataset into the **[vr_data.csv](https://raw.githubusercontent.com/AkeemShepherd/Public_Health-Chicago/refs/heads/dev/data/vr_data.csv)** file, which 
-is used to run the **r.script ["figure"](https://github.com/AkeemShepherd/Public_Health-Chicago/blob/dev/src/figures.R)** to produce the spatial visualization. 
+is used to run the **r.script ["figure"](https://github.com/AkeemShepherd/Public_Health-Chicago/blob/dev/src/figures.R)** to produce outputs. 
 
 
 ## Table of Contents
