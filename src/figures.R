@@ -148,8 +148,8 @@ table_grob <- tableGrob(
   shootings_by_CA_,
   rows = NULL,
   theme = ttheme_minimal(
-    base_size = 5,                    # smaller text
-    padding = unit(c(1, 1), "mm"),    # tighter cells
+    base_size = 2,                    # smaller text
+    padding = unit(c(0.2, 0.2), "mm"),    # tighter cells
     core = list(
       fg_params = list(hjust = 0.5, x = 0.5)
     )
