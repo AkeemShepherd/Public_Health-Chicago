@@ -1,3 +1,4 @@
+## <figures>----
 ## <shootings2021>----
 head(vr_data$updated)
 
@@ -111,12 +112,13 @@ ggplot(per_chg, aes(x = year, y = pct_change)) +
 names(community_areas_map)
 # plot
 ggplot(community_areas_map) +
-  geom_sf(aes(fill = shootings), color = "black", linewidth = 0.2) +
+  geom_sf(aes(fill = shootings), color = "black", linewidth = 0.1) +
   scale_fill_gradient(
-    low = "lightyellow",
+    low = "white",
     high = "red",
-    name = "0-158"
-  ) +
+    name = "0 - 158",
+    breaks = c(120,80,40,0)
+    ) +
 labs(
     title = "Total Shootings (2025)",
     subtitle = "Chicago Community Areas",
@@ -132,11 +134,13 @@ labs(
         plot.subtitle = element_text(face = "bold",
                                      size = 8,
                                      family = "Times New Roman"),
-        legend.title = element_text(size = 6,
-                                    face = "italic"),
+        #legend.title = element_text(size = 6,
+                                    #face = "italic"),
         plot.caption = element_text(face = "italic",
                                     size = 5),
-        legend.text = element_text(size = 6))
+        #legend.text = element_text(size = 6)
+        legend.position = "none"
+        )
 
 
 # MAP: of 77 community areas with a gradient fill showing the % change in shootings between 2024 and 2025
