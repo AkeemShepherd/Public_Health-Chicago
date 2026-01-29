@@ -111,7 +111,7 @@ ggplot(per_chg, aes(x = year, y = pct_change)) +
 # MAP: of 77 community areas with a gradient fill showing the total number of shootings in 2025
 names(community_areas_map)
 # plot
-ggplot(community_areas_map) +
+map_plot <- ggplot(community_areas_map) +
   geom_sf(aes(fill = shootings), color = "black", linewidth = 0.1) +
   scale_fill_gradient(
     low = "white",
@@ -140,7 +140,25 @@ labs(
                                     size = 5),
         #legend.text = element_text(size = 6)
         legend.position = "none"
-        )
+        ) 
+shootings_by_CA_ <- shootings_by_CA %>%
+  arrange(shootings)
+
+table_grob <- tableGrob(
+  shootings_by_CA_,
+  rows = NULL,
+  theme = ttheme_minimal(
+    base_size = 5,                    # smaller text
+    padding = unit(c(1, 1), "mm"),    # tighter cells
+    core = list(
+      fg_params = list(hjust = 0.5, x = 0.5)
+    )
+  )
+)
+
+
+map_plot | wrap_elements(table_grob) +
+  plot_layout(widths = c(1, 1))
 
 
 # MAP: of 77 community areas with a gradient fill showing the % change in shootings between 2024 and 2025
