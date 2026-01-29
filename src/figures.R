@@ -115,7 +115,7 @@ map_plot <- ggplot(community_areas_map) +
   geom_sf(aes(fill = shootings), color = "black", linewidth = 0.1) +
   scale_fill_gradient(
     low = "white",
-    high = "red",
+    high = "purple", #009 -LOOKS NICE and #56b
     name = "0 - 158",
     breaks = c(120,80,40,0)
     ) +
@@ -124,42 +124,36 @@ labs(
     subtitle = "Chicago Community Areas",
     caption = "Source: Violence Reduction Dashboard"
   ) +
-  theme_minimal()+
-  theme(axis.text.x = element_blank(),
+  theme_minimal()
+
+
+map_plot +
+  geom_sf_text(
+    aes(label = paste0(area_num_1)),
+    size = 1,
+    color = "black"
+  ) +
+  theme_void() +
+  guides(fill = guide_colorbar(reverse = TRUE)) +
+  theme(legend.title = element_text(face = "italic",
+                              size = 6,
+                              family = "Times New Roman"),
+        legend.text = element_text(face = "italic",
+                              size = 6,
+                              family = "Times New Roman"),
+        axis.text.x = element_blank(),
         axis.text.y = element_blank(),
         panel.grid = element_blank(),
         plot.title = element_text(face = "bold",
-                                  size = 12,
+                                  size = 10,
                                   family = "Times New Roman"),
         plot.subtitle = element_text(face = "bold",
                                      size = 8,
                                      family = "Times New Roman"),
-        #legend.title = element_text(size = 6,
-                                    #face = "italic"),
         plot.caption = element_text(face = "italic",
-                                    size = 5),
-        #legend.text = element_text(size = 6)
-        legend.position = "none"
-        ) 
-shootings_by_CA_ <- shootings_by_CA %>%
-  arrange(shootings)
-
-table_grob <- tableGrob(
-  shootings_by_CA_,
-  rows = NULL,
-  theme = ttheme_minimal(
-    base_size = 2,                    # smaller text
-    padding = unit(c(0.2, 0.2), "mm"),    # tighter cells
-    core = list(
-      fg_params = list(hjust = 0.5, x = 0.5)
-    )
-  )
+                                    size = 5)
 )
 
-
-map_plot | wrap_elements(table_grob) +
-  plot_layout(widths = c(1, 1))
-
-
-# MAP: of 77 community areas with a gradient fill showing the % change in shootings between 2024 and 2025
+# MAP: of 77 community areas with a gradient fill showing the % change in 
+# shootings between 2024 and 2025
 

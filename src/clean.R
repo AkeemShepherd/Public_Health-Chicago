@@ -81,6 +81,12 @@ community_areas_map <- boundary_file %>%
   left_join(shootings_by_CA, by = "community") %>%
   mutate(shootings = replace_na(shootings, 0))
 
+# convert column type to integer for plot capabilities
+community_areas_map1 <- community_areas_map %>%
+  mutate(
+    area_num_1 = as.integer(area_num_1)
+  )
+
 # save shapefile
 write_sf(community_areas_map, "~/Documents/GitHub_personal/Public_Health-Chicago/data/community_areas.shp" )
 

@@ -11,6 +11,11 @@ library("janitor")
 library("mapview")
 library("ggplot2")
 
+# incase I need a table_grob
+#install.packages("gridExtra")
+#library("gridExtra")
+#install.packages("patchwork")
+#library("patchwork")
 
 #renv::snapshot()
 renv::activate()
