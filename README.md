@@ -1,4 +1,4 @@
-# Violence Reduction Chicago
+# Violence Reduction Dashboard Data (Chicago)
 
 **Repo Manager:** Akeem Shepherd
 
@@ -8,7 +8,7 @@
 
 ## Overview 
 > 
-> This repo's code intends to explore trends on shooting incidents made public by the City of Chicago. These data represent the following from 1991 to 2026.
+> This repository code intends to explore trends on gun violent incidents made public by the city of Chicago. These data represent the following from years 1991 to 2026.
 
 ## Data 📊
 > The following data files are needed to run scripts in this repo:
@@ -23,11 +23,11 @@
 
 
 ## How to Use this Repo
-> Thus far, the frist goal of this repo is to create a spatial visualization of shootings in Chicago for year 2021.
+> This repo aims to explore gun violence in Chicago.
 > 
->> To sccessfully do so, first run the **r.script ["main"](https://github.com/AkeemShepherd/Public_Health-Chicago/blob/dev/src/main.R)**, that contains all the necessary packages for cleaning and visualizing those trends. 
+>> To produce outputs, first run the **r.script ["main"](https://github.com/AkeemShepherd/Public_Health-Chicago/blob/dev/src/main.R)**, which contains all the necessary packages to successfully clean and visualize these data trends. 
 Then run the **r.script ["import"](https://github.com/AkeemShepherd/Public_Health-Chicago/blob/dev/src/import.R)** to import the raw dataset. Use the **r.script ["clean"](https://github.com/AkeemShepherd/Public_Health-Chicago/blob/dev/src/clean.R)** to reconstruct the raw dataset into the **[vr_data.csv](https://raw.githubusercontent.com/AkeemShepherd/Public_Health-Chicago/refs/heads/dev/data/vr_data.csv)** file, which 
-is used to run the **r.script ["figure"](https://github.com/AkeemShepherd/Public_Health-Chicago/blob/dev/src/figures.R)** to produce the spatial visualization. 
+is used to run the **r.script ["figure"](https://github.com/AkeemShepherd/Public_Health-Chicago/blob/dev/src/figures.R)** to produce outputs. 
 
 
 ## Table of Contents
