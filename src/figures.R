@@ -54,11 +54,11 @@ line_viz <- data2016_25 %>%
   arrange(case_number)                            # order by year
 
 ggplot(line_viz, aes(x = case_number, y = incident_primary)) +
-  geom_line() +
-  geom_point() +
+  geom_line(color = "purple") +
+  geom_point(color = "gray", size = 2) +
   scale_x_continuous(breaks = line_viz$case_number) +
   labs(
-    title = "Total Shooting Incidents",
+    title = "Total Shooting Incidents per year",
     x = "",
     y = ""
   ) +
@@ -66,7 +66,10 @@ ggplot(line_viz, aes(x = case_number, y = incident_primary)) +
   theme(panel.grid.minor = element_blank(),
         plot.title = element_text(face = "bold", 
                                   size = 10, 
-                                  family = "Times New Roman"))
+                                  family = "Times New Roman"),
+        axis.text.x = element_text(size = 7),
+        axis.text.y = element_text(size = 7)
+)
 
 ## <bar_graph>----
 # BAR CHART: % change in total shootings for each year over time, using 2015 as the "start" year
