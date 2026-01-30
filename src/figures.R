@@ -170,3 +170,22 @@ map_plot +
 # MAP: of 77 community areas with a gradient fill showing the % change in 
 # shootings between 2024 and 2025
 
+data2024_25 <- vr_data[vr_data$case_number >= as.POSIXct("2023-01-01 00:00:00") &
+                         vr_data$case_number <= as.POSIXct("2025-12-31 23:59:59"), ]
+
+data2024_25$case_number <- substr(data2024_25$case_number, 1, 4) 
+
+# Aggregate total incidents by year
+per_chg24_25 <- data2024_25 %>%
+  mutate(year = as.integer(case_number)) %>%
+  filter(year >= 2023) %>%  
+  group_by(year) %>%
+  summarise(incidents = n(), .groups = "drop") %>%
+  arrange(year) %>%
+  mutate(
+    pct_change = (incidents / lag(incidents) - 1) * 100
+  )
+
+per_chg <- per_chg %>%
+  filter(year!=2015)
+

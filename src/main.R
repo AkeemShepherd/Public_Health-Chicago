@@ -10,12 +10,10 @@ library("janitor")
 #install.packages("mapview")
 library("mapview")
 library("ggplot2")
+#install.packages("tidycensus")
+library("tidycensus")
 
-# incase I need a table_grob
-#install.packages("gridExtra")
-#library("gridExtra")
-#install.packages("patchwork")
-#library("patchwork")
+
 
 #renv::snapshot()
 renv::activate()
