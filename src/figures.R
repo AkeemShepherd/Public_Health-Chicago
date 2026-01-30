@@ -170,22 +170,49 @@ map_plot +
 # MAP: of 77 community areas with a gradient fill showing the % change in 
 # shootings between 2024 and 2025
 
-data2024_25 <- vr_data[vr_data$case_number >= as.POSIXct("2023-01-01 00:00:00") &
-                         vr_data$case_number <= as.POSIXct("2025-12-31 23:59:59"), ]
+names(joined_shootings_perchng)
 
-data2024_25$case_number <- substr(data2024_25$case_number, 1, 4) 
+# plot
+map_plot <- ggplot(joined_shootings_perchng) +
+  geom_sf(aes(fill = pct_change_24_25), color = "black", linewidth = 0.1) +
+  scale_fill_gradient(
+    low = "white",
+    high = "purple", #009 -LOOKS NICE and #56b
+    name = "0 - 158",
+    #breaks = c(120,80,40,0)
+  ) +
+  labs(
+    title = "Year-Over-Year PCT_Change in Shootings (2024-2025)",
+    subtitle = "Chicago Community Areas",
+    caption = "Source: Violence Reduction Dashboard"
+  ) +
+  theme_minimal()
 
-# Aggregate total incidents by year
-per_chg24_25 <- data2024_25 %>%
-  mutate(year = as.integer(case_number)) %>%
-  filter(year >= 2023) %>%  
-  group_by(year) %>%
-  summarise(incidents = n(), .groups = "drop") %>%
-  arrange(year) %>%
-  mutate(
-    pct_change = (incidents / lag(incidents) - 1) * 100
+
+map_plot +
+  geom_sf_text(
+    aes(label = paste0(area_num_1)),
+    size = 1,
+    color = "black"
+  ) +
+  theme_void() +
+  guides(fill = guide_colorbar(reverse = TRUE)) +
+  theme(legend.title = element_text(face = "italic",
+                                    size = 6,
+                                    family = "Times New Roman"),
+        legend.text = element_text(face = "italic",
+                                   size = 6,
+                                   family = "Times New Roman"),
+        axis.text.x = element_blank(),
+        axis.text.y = element_blank(),
+        panel.grid = element_blank(),
+        plot.title = element_text(face = "bold",
+                                  size = 10,
+                                  family = "Times New Roman"),
+        plot.subtitle = element_text(face = "bold",
+                                     size = 8,
+                                     family = "Times New Roman"),
+        plot.caption = element_text(face = "italic",
+                                    size = 5)
   )
-
-per_chg <- per_chg %>%
-  filter(year!=2015)
 

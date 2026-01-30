@@ -94,3 +94,49 @@ write_sf(community_areas_map, "~/Documents/GitHub_personal/Public_Health-Chicago
 
 
 
+
+## <per_chg_24_25>----
+# MAP: of 77 community areas with a gradient fill showing the % change in 
+# shootings between 2024 and 2025
+
+data2024_25 <- vr_data[vr_data$case_number >= as.POSIXct("2023-01-01 00:00:00") &
+                         vr_data$case_number <= as.POSIXct("2025-12-31 23:59:59"), ]
+
+data2024_25$case_number <- substr(data2024_25$case_number, 1, 4) 
+
+
+shootings_perchng <- data2015_25 %>%
+  filter(incident_primary == "YES") %>%        
+  group_by(ward, case_number) %>%
+  summarise(
+    incident_primary = sum(incident_primary == "YES", na.rm = TRUE),
+    .groups = "drop"
+  ) %>%
+  pivot_wider(
+    names_from = case_number,
+    values_from = incident_primary,
+    names_prefix = "shootings_",
+    values_fill = 0
+  )
+
+# compute percent change for 24_25
+shootings_perchng <- shootings_perchng %>%
+  mutate(
+    pct_change_24_25 = case_when(
+      shootings_2024 == 0 & shootings_2025 == 0 ~ 0,
+      shootings_2024 == 0 & shootings_2025 > 0 ~ NA_real_,  # undefined / infinite
+      TRUE ~ ((shootings_2025 - shootings_2024) / shootings_2024) * 100
+    )
+  )
+
+# subset ward and percent change from the shootings_perchng
+
+subset_shootings_perchng <- shootings_perchng %>%
+  select(ward, pct_change_24_25) %>%
+  rename(community = ward)
+
+# left_join subset_shooting_perchng with boundary file for spatial viz
+
+joined_shootings_perchng <- boundary_file %>%
+  left_join(subset_shootings_perchng, by = "community") 
+  
