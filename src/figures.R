@@ -92,20 +92,29 @@ per_chg <- per_chg %>%
 
 #barchart 
 ggplot(per_chg, aes(x = year, y = pct_change)) +
-  geom_col(fill = "#DF536B") +
-  geom_text(aes(label = round(pct_change, 1)), vjust = .02, size = 3) +  # show percent on top
+  geom_col(fill = "purple") +
+  geom_text(
+    aes(
+      label = sprintf("%.1f%%", pct_change)), 
+      vjust = ifelse(per_chg$pct_change >= 0, -0.3, 1.2), 
+      size = 3
+    ) +  
   labs(
-    title = "% Change in Shooting Incidents",
+    title = "Year-Over-Year % Change in Shooting Incidents",
     x = "",
     y = ""
   ) +
   theme_minimal() +
   scale_x_continuous(breaks = per_chg$year) +
   theme(panel.grid.major = element_blank(),
-        #panel.grid.minor = element_blank()
         plot.title = element_text(face = "bold",
                                   size = 10,
-                                  family = "Times New Roman"))
+                                  family = "Times New Roman"),
+        axis.text.x = element_text(size = 8),
+        axis.text.y = element_text(size = 8)
+
+)
+
 
 ## <shootings2025byCA>----
 # MAP: of 77 community areas with a gradient fill showing the total number of shootings in 2025
@@ -154,6 +163,7 @@ map_plot +
                                     size = 5)
 )
 
+## <%chngshootings24-25>----
 # MAP: of 77 community areas with a gradient fill showing the % change in 
 # shootings between 2024 and 2025
 
