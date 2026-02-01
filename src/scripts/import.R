@@ -34,7 +34,7 @@ chi_pop <- purrr::map_dfr(
   ~ purrr::insistently(
   function(y) {
     get_acs(
-      geography = "place",
+      geography = place,
       variables = race,
       state = "IL",
       #county = "Cook", # for some reason, accounting for county causes the database to crash
@@ -58,14 +58,14 @@ write.csv(chi_pop,
           row.names = FALSE)
 
 # write a function that gathers median income by year
-income_chi_pop <- map_dfr(
+income_chi_pop_tract <- map_dfr(
   years,
   function(y) {
     get_acs(
-      geography = "place",
+      geography = place,
       variables = c(median_income = "B19013_001"),
       state = "IL",
-      place = "Chicago",
+      place = "Cook",
       year = y,
       survey = "acs5",
       output = "wide",
@@ -81,4 +81,46 @@ income_chi_pop <- income_chi_pop %>%
 write.csv(income_chi_pop, 
           "~/Documents/GitHub_personal/Public_Health-Chicago/data/median_income.csv",
           row.names = FALSE)
+
+# get census data by neighborhood level
+chi_pop_tracts <- get_acs(
+  geography = "tract",
+  variables = "B01003_001",
+  state = "IL",
+  county = "Cook",
+  year = 2023,          
+  survey = "acs5",
+  geometry = TRUE
+  )
+
+# remove MOE column
+chi_pop_tracts <- chi_pop_tracts %>%
+  select(-starts_with("m"))
+
+# plot for quick view
+mapview(chi_pop_tracts["geometry"])
+
+write_sf(chi_pop_tracts, 
+         "~/Documents/GitHub_personal/Public_Health-Chicago/data/Census_data/Population by neighborhood (boundary)/census_pop_tracts.shp")
+
+# boundary files for median household income by neighborhood
+
+chi_income_tracts <- get_acs(
+  geography = "tract",
+  variables = "B19013_001",
+  state = "IL",
+  county = "Cook",
+  year = 2023,
+  survey = "acs5",
+  geometry = TRUE
+) %>%
+  select(-starts_with("m"))
+
+mapview(chi_income_tracts["geometry"])
+
+write_sf(chi_income_tracts,
+         "~/Documents/GitHub_personal/Public_Health-Chicago/data/Census_data/income by neighborhood (boundary)/census_income_tract.shp")
+
+
+
 
