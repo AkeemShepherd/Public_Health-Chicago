@@ -96,14 +96,14 @@ per_chg <- per_chg %>%
 #barchart 
 ggplot(per_chg, aes(x = year, y = pct_change)) +
   geom_col(fill = "purple") +
-  geom_text(
+  geom_label(
     aes(
       label = sprintf("%.1f%%", pct_change)), 
-      vjust = ifelse(per_chg$pct_change >= 0, -0.3, 1.2), 
-      size = 3
+      vjust = ifelse(per_chg$pct_change >= 0, -0.02, 1), 
+      size = 2.5
     ) +  
   labs(
-    title = "Year-Over-Year % Change in Shooting Incidents",
+    title = "Year-Over-Year Percent Change in Shooting Incidents",
     x = "",
     y = ""
   ) +
@@ -120,7 +120,8 @@ ggplot(per_chg, aes(x = year, y = pct_change)) +
 
 
 ## <shootings2025byCA>----
-# MAP: of 77 community areas with a gradient fill showing the total number of shootings in 2025
+# MAP: of 77 community areas with a gradient fill showing the total 
+# number of shootings in 2025
 names(community_areas_map)
 # plot
 map_plot <- ggplot(community_areas_map) +
@@ -163,7 +164,9 @@ map_plot +
                                      size = 8,
                                      family = "Times New Roman"),
         plot.caption = element_text(face = "italic",
-                                    size = 5)
+                                    size = 5),
+        legend.key.height = unit(0.5, "cm"),
+        legend.key.width = unit(0.5, "cm")
 )
 
 ## <%chngshootings24-25>----
@@ -178,11 +181,11 @@ map_plot <- ggplot(joined_shootings_perchng) +
   scale_fill_gradient(
     low = "white",
     high = "purple", #009 -LOOKS NICE and #56b
-    name = "0 - 158",
-    #breaks = c(120,80,40,0)
+    name = "-100 - 900%",
+    breaks = c(750,500,250,0,-100)
   ) +
   labs(
-    title = "Year-Over-Year PCT_Change in Shootings (2024-2025)",
+    title = "Year-Over-Year Percent Change in Shootings (2024-2025)",
     subtitle = "Chicago Community Areas",
     caption = "Source: Violence Reduction Dashboard"
   ) +
@@ -199,7 +202,8 @@ map_plot +
   guides(fill = guide_colorbar(reverse = TRUE)) +
   theme(legend.title = element_text(face = "italic",
                                     size = 6,
-                                    family = "Times New Roman"),
+                                    family = "Times New Roman",
+                                    margin = margin(b=10)),
         legend.text = element_text(face = "italic",
                                    size = 6,
                                    family = "Times New Roman"),
@@ -213,6 +217,8 @@ map_plot +
                                      size = 8,
                                      family = "Times New Roman"),
         plot.caption = element_text(face = "italic",
-                                    size = 5)
+                                    size = 5),
+        legend.key.height = unit(0.5, "cm"),
+        legend.key.width = unit(0.3, "cm")
   )
 

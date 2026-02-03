@@ -6,6 +6,7 @@ vr_data <- read.csv("~/Documents/GitHub_personal/Public_Health-Chicago/data/vr_d
                     header = TRUE, 
                     sep = ",", 
                     row.names = NULL)
+cen_pop_tracts <- st_read("~/Documents/GitHub_personal/Public_Health-Chicago/data/Census_data/Population by neighborhood (boundary)/census_pop_tracts.shp")
 
 #import boundary file using st_read which requires the "sf" package and converts file to an sf object
 boundary_file <- st_read("~/Documents/GitHub_personal/Public_Health-Chicago/data/Boundaries - Community Areas_20260126/geo_export_72abcdaa-ed06-4240-95a9-1ac31523b938.shp")
@@ -70,41 +71,18 @@ income_chi_pop_tract <- map_dfr(
       survey = "acs5",
       output = "wide",
     ) %>%
-      mutate(year = y)
+      mutate(year = y) %>%
+      select(-ends_with("M"))
   }
 )
 
-# remove M-margin of error
-income_chi_pop <- income_chi_pop %>%
-  select(-ends_with("M"))
-
+# export median income to disk
 write.csv(income_chi_pop, 
           "~/Documents/GitHub_personal/Public_Health-Chicago/data/median_income.csv",
           row.names = FALSE)
 
-# get census data by neighborhood level
-chi_pop_tracts <- get_acs(
-  geography = "tract",
-  variables = "B01003_001",
-  state = "IL",
-  county = "Cook",
-  year = 2023,          
-  survey = "acs5",
-  geometry = TRUE
-  )
-
-# remove MOE column
-chi_pop_tracts <- chi_pop_tracts %>%
-  select(-starts_with("m"))
-
-# plot for quick view
-mapview(chi_pop_tracts["geometry"])
-
-write_sf(chi_pop_tracts, 
-         "~/Documents/GitHub_personal/Public_Health-Chicago/data/Census_data/Population by neighborhood (boundary)/census_pop_tracts.shp")
 
 # boundary files for median household income by neighborhood
-
 chi_income_tracts <- get_acs(
   geography = "tract",
   variables = "B19013_001",
@@ -116,11 +94,50 @@ chi_income_tracts <- get_acs(
 ) %>%
   select(-starts_with("m"))
 
+# see what polygons look like
 mapview(chi_income_tracts["geometry"])
 
+# export boundaryfile to disk
 write_sf(chi_income_tracts,
          "~/Documents/GitHub_personal/Public_Health-Chicago/data/Census_data/income by neighborhood (boundary)/census_income_tract.shp")
 
+columns_needed <- read.csv("~/Documents/GitHub_personal/Public_Health-Chicago/data/Affordable_Rental_Housing_Developments_20260203.csv", 
+                           header = TRUE)
+# MISSING AREA 12, 20, 47, 52, 57, 59, 64, 72, 74, 75, 76
+
+COLS <- columns_needed %>%
+  select(Community.Area.Name,
+         Community.Area.Number,
+         Zip.Code) %>%
+  rename(community = Community.Area.Name,
+         area_num = Community.Area.Number,
+         zipcode = Zip.Code)
+ 
 
 
+COLS <- COLS %>%
+  group_by(community, zipcode) %>%
+  summarise(total = sum(area_num, na.rm = TRUE))
 
+COLS <- COLS %>%
+  select(-starts_with("total"))
+
+Chicago_population_data <- read.csv("~/Documents/GitHub_personal/Public_Health-Chicago/data/VR data/Chicago_Population_Counts_20260202.csv",
+                                    header = TRUE)
+
+# All citywide population counts
+citywide_tot_pop <- Chicago_population_data %>%
+  filter(Geography.Type == "Citywide")
+
+Chicago_population_data <- Chicago_population_data %>%
+  filter(Geography.Type != "Citywide") %>%
+  rename(zipcode = Geography) %>%
+  select(-starts_with("Geography.Type"))
+
+Chicago_population_data <- Chicago_population_data %>%
+  mutate(zipcode = as.integer(zipcode))
+
+
+Fin_Chicago_population_data <- COLS %>%
+  left_join(Chicago_population_data, by = "zipcode") 
+  

@@ -138,5 +138,7 @@ subset_shootings_perchng <- shootings_perchng %>%
 # left_join subset_shooting_perchng with boundary file for spatial viz
 
 joined_shootings_perchng <- boundary_file %>%
-  left_join(subset_shootings_perchng, by = "community") 
+  left_join(subset_shootings_perchng, by = "community") %>%
+  mutate(pct_change_24_25 = replace_na(pct_change_24_25, 0))
+
   
