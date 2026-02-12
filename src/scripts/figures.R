@@ -55,20 +55,26 @@ line_viz <- data2016_25 %>%
 
 ggplot(line_viz, aes(x = case_number, y = incident_primary)) +
   geom_line(color = "purple") +
-  geom_point(color = "gray", size = 2) +
+  geom_point(color = "purple", size = 1) +
+  geom_hline(yintercept = 0, linewidth = 0.2) +
+  geom_vline(xintercept = 2015, linewidth = 0.2) +
   scale_x_continuous(breaks = line_viz$case_number) +
   labs(
-    title = "Total Shooting Incidents per year",
-    x = "",
-    y = ""
+    title = "Total Shooting Incidents by Year in Chicago",
+    x = "Year",
+    y = "Counts"
   ) +
   theme_minimal() +
   theme(panel.grid.minor = element_blank(),
         plot.title = element_text(face = "bold", 
                                   size = 10, 
                                   family = "Times New Roman"),
-        axis.text.x = element_text(size = 7),
-        axis.text.y = element_text(size = 7)
+        axis.text.x = element_text(size = 5),
+        axis.text.y = element_text(size = 5),
+        axis.title.x = element_text(size = 6,
+                                    face = "italic"),
+        axis.title.y = element_text(size = 6,
+                                    face = "italic")
 )
 
 ## <bar_graph>----
@@ -102,19 +108,27 @@ ggplot(per_chg, aes(x = year, y = pct_change)) +
       vjust = ifelse(per_chg$pct_change >= 0, -0.02, 1), 
       size = 2.5
     ) +  
+  geom_hline(yintercept = 0, linewidth = 0.2) +
+  scale_y_continuous(labels = scales::percent_format(scale = 1, accuracy = 1), 
+                     limits = c(-60,60)) +
+  theme_classic() + 
   labs(
-    title = "Year-Over-Year Percent Change in Shooting Incidents",
-    x = "",
-    y = ""
+    title = "Year-Over-Year Percent Change in Shooting Incidents in Chicago",
+    x = "year",
+    y = "%"
   ) +
-  theme_minimal() +
   scale_x_continuous(breaks = per_chg$year) +
   theme(panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
         plot.title = element_text(face = "bold",
                                   size = 10,
                                   family = "Times New Roman"),
-        axis.text.x = element_text(size = 8),
-        axis.text.y = element_text(size = 8)
+        axis.text.x = element_text(size = 6),
+        axis.text.y = element_text(size = 6),
+        axis.title.x = element_text(size = 9,
+                                    face = "italic"),
+        axis.title.y = element_text(size = 9,
+                                    face = "italic")
 
 )
 
@@ -129,7 +143,7 @@ map_plot <- ggplot(community_areas_map) +
   scale_fill_gradient(
     low = "white",
     high = "purple", #009 -LOOKS NICE and #56b
-    name = "0 - 158",
+    name = "Counts: 0 - 158",
     breaks = c(120,80,40,0)
     ) +
 labs(
@@ -141,11 +155,11 @@ labs(
 
 
 map_plot +
-  geom_sf_text(
-    aes(label = paste0(area_num_1)),
-    size = 1,
-    color = "black"
-  ) +
+  #geom_sf_text(
+    #aes(label = paste0(area_num_1)),
+    #size = 1,
+    #color = "black"
+  #) +
   theme_void() +
   guides(fill = guide_colorbar(reverse = TRUE)) +
   theme(legend.title = element_text(face = "italic",
@@ -165,41 +179,40 @@ map_plot +
                                      family = "Times New Roman"),
         plot.caption = element_text(face = "italic",
                                     size = 5),
-        legend.key.height = unit(0.5, "cm"),
-        legend.key.width = unit(0.5, "cm")
+        legend.key.height = unit(0.3, "cm"),
+        legend.key.width = unit(0.3, "cm")
 )
 
 ## <%chngshootings24-25>----
 # MAP: of 77 community areas with a gradient fill showing the % change in 
 # shootings between 2024 and 2025
 
-names(joined_shootings_perchng)
+# names(joined_shootings_perchng)
 
 # plot
 map_plot <- ggplot(joined_shootings_perchng) +
-  geom_sf(aes(fill = pct_change_24_25), color = "black", linewidth = 0.1) +
-  scale_fill_gradient(
-    low = "white",
-    high = "purple", #009 -LOOKS NICE and #56b
-    name = "-100 - 900%",
-    breaks = c(750,500,250,0,-100)
-  ) +
+  geom_sf(aes(fill = pct_bin), color = "black", linewidth = 0.1) +
+  scale_fill_brewer(palette = "PuOr",
+                    name = "Percent Changes") +
+    #low = "white",
+    #high = "purple", #009 -LOOKS NICE and #56b
+    #name = "-100 - 900%",
+    #breaks = c(750,500,250,0,-100)
+  #) +
   labs(
     title = "Year-Over-Year Percent Change in Shootings (2024-2025)",
     subtitle = "Chicago Community Areas",
     caption = "Source: Violence Reduction Dashboard"
-  ) +
-  theme_minimal()
+  ) 
 
 
 map_plot +
-  geom_sf_text(
-    aes(label = paste0(area_num_1)),
-    size = 1,
-    color = "black"
-  ) +
+  #geom_sf_text(
+    #aes(label = paste0(area_num_1)),
+    #size = 1,
+    #color = "black"
+  #) +
   theme_void() +
-  guides(fill = guide_colorbar(reverse = TRUE)) +
   theme(legend.title = element_text(face = "italic",
                                     size = 6,
                                     family = "Times New Roman",
@@ -221,4 +234,49 @@ map_plot +
         legend.key.height = unit(0.5, "cm"),
         legend.key.width = unit(0.3, "cm")
   )
+
+
+## <total_population>----
+
+mapplot <- ggplot(Chicago_pop2021) +
+  geom_sf(aes(fill = Percent_pop), color = "black", linewidth = 0.1) +
+  scale_fill_gradient(
+    low = "white",
+    high = "purple", #009 -LOOKS NICE and #56b
+    name = "",
+    #breaks = c(750,500,250,0,-100)
+  ) +
+  labs(
+    title = "Total Population Estimates (2021)",
+    subtitle = "Chicago Community Areas",
+    caption = "Source: Chicago Open Data, Census, & Chicago Metropolitan Agency for Planning (CMPA)"
+  ) +
+  theme_minimal()
+
+mapplot +
+  #geom_sf_text(
+    #aes(label = paste0(area_num_1)),
+    #size = 1.5,
+    #color = "black"
+  #) +
+  theme_void() +
+  guides(fill = guide_colorbar(reverse = TRUE)) +
+  theme(legend.position = "none",
+        axis.text.x = element_blank(),
+        axis.text.y = element_blank(),
+        panel.grid = element_blank(),
+        plot.title = element_text(face = "bold",
+                                  size = 10,
+                                  family = "Times New Roman"),
+        plot.subtitle = element_text(face = "bold",
+                                     size = 8,
+                                     family = "Times New Roman"),
+        plot.caption = element_text(face = "italic",
+                                    size = 5)
+  )
+
+
+
+
+
 

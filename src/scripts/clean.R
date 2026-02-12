@@ -141,4 +141,150 @@ joined_shootings_perchng <- boundary_file %>%
   left_join(subset_shootings_perchng, by = "community") %>%
   mutate(pct_change_24_25 = replace_na(pct_change_24_25, 0))
 
+# bin percent change values for a cleaner visualization
+joined_shootings_perchng <- joined_shootings_perchng %>%
+  mutate(
+    pct_bin = case_when(
+      pct_change_24_25 <= -100 ~ "Large Decrease",
+      pct_change_24_25 <= -50 ~ "Moderate Decrease",
+      pct_change_24_25 < -30    ~ "Small Decrease",
+      pct_change_24_25 == 0   ~ "No Change",
+      pct_change_24_25 <= 80  ~ "Small Increase",
+      pct_change_24_25 <= 100  ~ "Moderate Increase",
+      TRUE                  ~ "Large Increase"
+    )
+  )
+
+# order bins for plotting
+joined_shootings_perchng <- joined_shootings_perchng %>%
+  mutate(
+    pct_bin = factor(
+      pct_bin,
+      levels = c(
+        "Large Decrease",
+        "Moderate Decrease",
+        "Small Decrease",
+        "No Change",
+        "Small Increase",
+        "Moderate Increase",
+        "Large Increase"
+      ),
+      ordered = TRUE
+    )
+  )
+
+
+## <total_pop_by_community_area>----
+# all community total population code lay below. 
+# community level population data did not contain name of area or area num, but did contain
+# zip_code. Because of this, I used a real estate dataset that held columns containing 
+# both zip_codes, and area names and matched those to population dataset based on zip_codes while i
+# including community area names
+
+# Citywide population counts 
+citywide_tot_pop <- Chicago_population_data %>%
+  filter(Geography.Type == "Citywide")
+
+# Zipcode population counts
+Chicago_population_data <- Chicago_population_data %>%
+  filter(Geography.Type != "Citywide") %>%
+  rename(zipcode = Geography) %>%
+  select(-starts_with("Geography.Type"))
+
+# change zipcode colum type from character to integer to support join later
+Chicago_population_data <- Chicago_population_data %>%
+  mutate(zipcode = as.integer(zipcode))
+
+# ===========================
+# Fin_Chicago_population_dataset was created using "COLS df that came from a 
+# columns_needed" dataset that contained all community areas with corresponding zipcodes
+# and area codes. The dataset 'COLS' is a housing dataset mined from Chicago Open Data, 
+# and was slected specifically for columns area number, community area name, and zipcodes.
+# The Final Chicago Population file was created with the "COLS" and raw Chicago 
+# population data that came from Chicago Open data, which has total population variables
+# for 2018 to 2021 by Zipcode.
+
+# Note: the 'columns_needed' dataset did not contain area codes and correpsonding community area 
+# and zip codes for the following areas: 12, 20, 47, 52, 57, 59, 64, 72, 74, 75, 76.
+# I would later add these manually using 2023 population estimates provided by 
+# Chicago Metropolitan Agency for Planning (CMAP), .
+
+#COLS <- columns_needed %>%
+  #select(Community.Area.Name,
+         #Community.Area.Number,
+        # Zip.Code) %>%
+  #rename(community = Community.Area.Name,
+         #area_num = Community.Area.Number,
+         #zipcode = Zip.Code)
+
+#COLS <- COLS %>%
+  #group_by(community, zipcode) %>%
+  #summarise(total = sum(area_num, na.rm = TRUE))
+
+#COLS <- COLS %>%
+  #select(-starts_with("total"))
+
+# create Final Chicago Populaiton Dataset
+# Fin_Chicago_population_data <- COLS %>% 
+#             left_join(Chicago_population_data, by = "zipcode") 
+# ============
+
+Chicago_pop2021 <- Fin_Chicago_population_data %>%
+  filter(Year == "2021")
+
+Chicago_pop2021 <- Chicago_pop2021 %>%
+  select(community, zipcode, Year, Population...Female, Population...Male) %>%
+  mutate(
+    Population...Female = as.numeric(gsub(",", "", Population...Female)),
+    Population...Male = as.numeric(gsub(",", "", Population...Male)),
+    population = Population...Female + Population...Male) %>%
+  select(-starts_with("zipcode")) %>%
+  select(-starts_with("Year"))
+
+Chicago_pop2021<- Chicago_pop2021 %>%
+  group_by(community) %>%
+  summarise(total_pop = sum(population, na.rm = TRUE)) 
+
+Chicago_pop2021 <- Chicago_pop2021 %>%
+  mutate(across(where(is.character), toupper))
+
+Chicago_pop2021 <- boundary_file %>%
+  left_join(Chicago_pop2021, by = "community")
+
+# these are filled in with population estimates for 2023, 
+# according to https://cmap.illinois.gov/data/community-data-snapshots/
+# the Chicago_pop_2021 dataset is essentially frankenstined, where total populations
+# represent mostly 2021 data from Chicago Open data and 2023 data from cmap (cmap used to sub
+# NAs-NAs in the case area created due to lack of representation in the COLS dataset for community area
+# values: 12, 20, 47, 52, 57, 59, 64, 72, 74, 75, 76)
+
+Chicago_pop2021 <- Chicago_pop2021 %>%
+  mutate(
+    total_pop = case_when(
+      is.na(total_pop) & community == "FOREST GLEN" ~ 19517,
+      is.na(total_pop) & community == "HERMOSA" ~ 22776,
+      is.na(total_pop) & community == "BURNSIDE" ~ 2148,
+      is.na(total_pop) & community == "EAST SIDE" ~ 22722,
+      is.na(total_pop) & community == "RIVERDALE" ~ 7536,
+      is.na(total_pop) & community == "ARCHER HEIGHTS" ~ 14021,
+      is.na(total_pop) & community == "MCKINLEY PARK" ~ 15443,
+      is.na(total_pop) & community == "CLEARING" ~ 24924,
+      is.na(total_pop) & community == "BEVERLY" ~ 19570,
+      is.na(total_pop) & community == "MOUNT GREENWOOD" ~ 18553,
+      is.na(total_pop) & community == "MORGAN PARK" ~ 21325,
+      is.na(total_pop) & community == "OHARE" ~ 14004,
+      TRUE ~ total_pop
+    )
+  )
+
+# using Chicago_pop2021 get population percentages by community area to the 
+# nearest hundredth 
+
+
+Chicago_pop2021 <- Chicago_pop2021 %>%
+  mutate(
+    Percent_pop = round(total_pop / sum(total_pop) * 100, 2)
+  )
+
+
   
