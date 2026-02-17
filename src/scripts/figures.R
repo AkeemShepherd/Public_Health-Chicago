@@ -275,7 +275,43 @@ mapplot +
                                     size = 5)
   )
 
+## <100K_cap_shooting>----
+mapplot <- ggplot(shootings_per_cap) +
+  geom_sf(aes(fill = shootings_per_100k), color = "black", linewidth = 0.1) +
+  scale_fill_gradient(
+    low = "white",
+    high = "purple", #009 -LOOKS NICE and #56b
+    name = "",
+    #breaks = c(750,500,250,0,-100)
+  ) +
+  labs(
+    title = "Shootings per 100k capita",
+    subtitle = "Chicago Community Areas",
+    caption = "Source: Chicago Open Data, Census, & Chicago Metropolitan Agency for Planning (CMPA)"
+  ) +
+  theme_minimal()
 
+mapplot +
+  geom_sf_text(
+  #aes(label = paste0(area_num_1)),
+  #size = 1.5,
+  #color = "black"
+  #) +
+  theme_void() +
+  guides(fill = guide_colorbar(reverse = TRUE)) +
+  theme(legend.position = "none",
+        axis.text.x = element_blank(),
+        axis.text.y = element_blank(),
+        panel.grid = element_blank(),
+        plot.title = element_text(face = "bold",
+                                  size = 10,
+                                  family = "Times New Roman"),
+        plot.subtitle = element_text(face = "bold",
+                                     size = 8,
+                                     family = "Times New Roman"),
+        plot.caption = element_text(face = "italic",
+                                    size = 5)
+  )
 
 
 

@@ -288,3 +288,21 @@ Chicago_pop2021 <- Chicago_pop2021 %>%
 
 
   
+
+## <shootings_by_CCA_pop_capita>----
+# join shootings for year 2025 to CCA population 2021 boundary file
+shootings_per_cap <- Chicago_pop2021 %>%
+  left_join(shootings_by_CA, by = "community") %>%
+  mutate(shootings = ifelse(is.na(shootings), 0, shootings))
+# For this analysis should I drop NAs, which is an indication for areas
+# without shootings for year 2025 (convert the NAs to 0)
+
+# shootings/population X 100000 to get shootings by CCA
+
+shootings_per_cap <- shootings_per_cap %>%
+  mutate(
+    shootings_per_100k = (shootings / total_pop) * 100000
+  ) %>%
+  mutate(
+shootings_per_100k = round(shootings_per_100k, 1)
+)
