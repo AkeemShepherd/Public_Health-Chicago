@@ -36,6 +36,32 @@ vr_data <- data %>%
 
 write.csv(vr_data, "~/Documents/GitHub_personal/data/vr_data.csv", row.names = FALSE)
 
+## <total_shootings21>----
+head(vr_data$updated)
+
+vr_data <- vr_data %>%
+  mutate(
+    # from vr_data extract (latitude, as numeric
+    lat = as.numeric(str_extract(updated, "(?<=\\().+?(?=,)")),
+    # from vr_data extract ,longitude) as numeric
+    lon = as.numeric(str_extract(updated, "(?<=,).+?(?=\\))"))
+  ) 
+
+# convert vr_data to a spatial dataframe using function "st_as_sf" from the sf package
+vr_sf <- st_as_sf(
+  vr_data,
+  # use "wkt=" if column is formatted as Point(lat, long)
+  wkt = "updated",
+  crs = 4326
+)
+
+# check to make sure vr_sf is spatial and a dataframe
+class(vr_sf)
+
+# check geometry column in vr_sf
+st_geometry(vr_sf)
+
+
 ## <total_shootings25>----
 
 # goal: build a df that includes a subset of all data corresponding to year 2025
@@ -70,7 +96,7 @@ shootings_by_CA <- shootings_by_CA %>%
   st_drop_geometry() %>%
   count(ward, name = "total shootings") %>%
   rename(shootings = 'total shootings',
-         communtity = 'ward')
+         community = 'ward')
 
 #shootings_by_CA <- shootings_by_CA %>%
 #rename(shootings = 'total shootings',
@@ -79,20 +105,9 @@ shootings_by_CA <- shootings_by_CA %>%
 # join shootings by_CA to boundary map
 community_areas_map <- boundary_file %>%
   left_join(shootings_by_CA, by = "community") %>%
-  mutate(shootings = replace_na(shootings, 0))
-
-# convert column type to integer for plot capabilities
-community_areas_map1 <- community_areas_map %>%
-  mutate(
-    area_num_1 = as.integer(area_num_1)
-  )
-
-# save shapefile
-write_sf(community_areas_map, "~/Documents/GitHub_personal/Public_Health-Chicago/data/community_areas.shp" )
-
-
-
-
+  mutate(shootings = replace_na(shootings, 0)) %>%
+  # convert column type to integer for plot capabilities
+  mutate(area_num_1 = as.integer(area_num_1))
 
 
 ## <per_chg_24_25>----
@@ -209,24 +224,24 @@ Chicago_population_data <- Chicago_population_data %>%
 # I would later add these manually using 2023 population estimates provided by 
 # Chicago Metropolitan Agency for Planning (CMAP), .
 
-#COLS <- columns_needed %>%
-  #select(Community.Area.Name,
-         #Community.Area.Number,
-        # Zip.Code) %>%
-  #rename(community = Community.Area.Name,
-         #area_num = Community.Area.Number,
-         #zipcode = Zip.Code)
+Cols <- Cols %>%
+  select(Community.Area.Name,
+         Community.Area.Number,
+         Zip.Code) %>%
+  rename(community = Community.Area.Name,
+         area_num = Community.Area.Number,
+         zipcode = Zip.Code)
 
-#COLS <- COLS %>%
-  #group_by(community, zipcode) %>%
-  #summarise(total = sum(area_num, na.rm = TRUE))
+Cols <- Cols %>%
+  group_by(community, zipcode) %>%
+  summarise(total = sum(area_num, na.rm = TRUE))
 
-#COLS <- COLS %>%
-  #select(-starts_with("total"))
+Cols <- Cols %>%
+  select(-starts_with("total"))
 
 # create Final Chicago Populaiton Dataset
-# Fin_Chicago_population_data <- COLS %>% 
-#             left_join(Chicago_population_data, by = "zipcode") 
+Fin_Chicago_population_data <- Cols %>% 
+             left_join(Chicago_population_data, by = "zipcode") 
 # ============
 
 Chicago_pop2021 <- Fin_Chicago_population_data %>%
@@ -306,3 +321,58 @@ shootings_per_cap <- shootings_per_cap %>%
   mutate(
 shootings_per_100k = round(shootings_per_100k, 1)
 )
+
+## <dosage_based_analysis>----
+# filter the data set to exclude all CVI-orgs that no longer exist
+# layer cvi map boundaries frame with community areas frame
+# first check crs 
+st_crs(cvi_map_boundaries_raw) # 3435
+st_crs(community_areas_map) # 4326
+# because these frames have different EPSG, transform one cvi_map_boundaries_raw
+# to match community_areas_map to projected EPSG
+cvi_map_boundaries_raw <- st_transform(cvi_map_boundaries_raw, 3435)
+community_areas_map <- st_transform(community_areas_map, 3435)
+
+intersection_layer <- st_intersection(community_areas_map, cvi_map_boundaries_raw)
+
+intersection_layer <- intersection_layer %>%
+  select(-c(program_type, boundary_end_date)) %>%
+  filter(current_map == "TRUE")
+
+intersection_layer <-
+  st_collection_extract(intersection_layer, "POLYGON")
+
+  
+# To make a dosage based analysis possible, the model needs
+# data set that has 'community_area', 'population','2025_shootings',
+# and 'outreach orgs'.
+# step one: build the data set by joining shootings_by_CA file to community_areas_map file.
+#   join the population by community area file to shootings with cvi_map_boundaries.
+
+dosage_analysis <-  community_areas_map %>%
+  left_join(shootings_by_CA, by = "community") 
+
+# check CRS
+st_crs(dosage_analysis) #3435
+st_crs(Chicago_pop2021) #4326
+
+# match CRS/ESPG of data sets
+Chicago_pop2021 <- st_transform(
+  Chicago_pop2021,
+  st_crs(dosage_analysis)
+)
+
+# join
+dosage_analysis <- dosage_analysis %>%
+  st_join(Chicago_pop2021, by = "community") 
+
+dosage_analysis <- dosage_analysis %>%
+  rename(community=community.x)
+
+
+dosage_analysis <- dosage_analysis %>%
+  st_join(intersection_layer, by = "community")
+
+# Now that there's a dosage data set, proceed to building the model in analysis.R.
+
+

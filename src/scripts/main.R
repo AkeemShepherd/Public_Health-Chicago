@@ -12,7 +12,8 @@ library("mapview")
 library("ggplot2")
 #install.packages("tidycensus")
 library("tidycensus")
-
+#install.packages("bigrquery")
+library("bigrquery")
 
 
 #renv::snapshot()

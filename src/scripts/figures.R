@@ -33,7 +33,8 @@ vr_subset <- vr_sf[ # in the vr_sf dataframe column case_number, select all valu
 
 # plot
 mapview(vr_subset["updated"])
-
+mapview(cvi_map_boundaries_raw["geometry"])
+mapview()
 # What have shootings trends been like over the past 10 years? (Have they gone up? Down?) Try one or more of:
 # LINE GRAPH: total citywide shootings for each year from 2016-2025
 
@@ -281,8 +282,8 @@ mapplot <- ggplot(shootings_per_cap) +
   scale_fill_gradient(
     low = "white",
     high = "purple", #009 -LOOKS NICE and #56b
-    name = "",
-    #breaks = c(750,500,250,0,-100)
+    name = "shootings [0 - 358]",
+    breaks = c(350,250,150,50)
   ) +
   labs(
     title = "Shootings per 100k capita",
@@ -292,14 +293,20 @@ mapplot <- ggplot(shootings_per_cap) +
   theme_minimal()
 
 mapplot +
-  geom_sf_text(
+  #geom_sf_text(
   #aes(label = paste0(area_num_1)),
   #size = 1.5,
   #color = "black"
   #) +
   theme_void() +
   guides(fill = guide_colorbar(reverse = TRUE)) +
-  theme(legend.position = "none",
+  theme(#legend.position = "none",
+        legend.title = element_text(face = "italic",
+                                    size = 6),
+        legend.text = element_text(face = "italic",
+                                   size = 6),
+        legend.key.height = unit(0.8, "cm"),
+        legend.key.width = unit(0.3, "cm"),
         axis.text.x = element_blank(),
         axis.text.y = element_blank(),
         panel.grid = element_blank(),
@@ -316,3 +323,42 @@ mapplot +
 
 
 
+
+
+## <CVI in CCA Map> ----
+cvi_in_cca <- st_intersection(
+  st_union(community_areas_map), # union ensures we clip only within Chicago
+  cvi_map_boundaries_raw
+) %>%
+  st_collection_extract("POLYGON")
+#filter(!st_is_empty(.))
+
+ggplot() +
+  # Base layer: CCAs boundaries
+  geom_sf(data = community_areas_map,
+          fill = "grey95",  # light fill for context
+          color = "white") + # boundaries visible
+  # Overlay layer: shaded CVI areas
+  geom_sf(data = cvi_in_cca,
+          fill = "blue",    # shaded color
+          alpha = 0.5,      # semi-transparent
+          color = NA) +     # no borders for overlay
+  theme_void()  
+## <Dosage analysis>----
+mapplot <- ggplot(dosage1, aes(x = org, y = shootings)) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  labs(
+    x = "Number of Organizations",
+    y = "Shootings",
+    title = "Relationship Between CVI Dosage and Shootings"
+  )
+
+mapplot +
+  theme(
+        panel.grid = element_blank(),
+        plot.title = element_text(face = "bold",
+                                  size = 10,
+                                  family = "Times New Roman"),
+       
+  )
