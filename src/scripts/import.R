@@ -25,5 +25,6 @@ cvi_map_boundaries_raw <- bq_project_query("n3-main",
   # Project CCAs into projected coordinate system for consistent analysis
   st_transform(3435)
 
+# there is a cleaner version of the 
 chicago_areas <- st_read("~/Documents/GitHub_personal/Public_Health-Chicago/data/VR data/Boundaries - 2015-2025 shootings/community_areas.shp")
 Cols <- read.csv("~/Documents/GitHub_personal/Public_Health-Chicago/data/Affordable_Rental_Housing_Developments_20260203.csv")

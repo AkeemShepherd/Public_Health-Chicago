@@ -9,6 +9,9 @@
 # things to consider: there are other variables that affect shootings
 #                     besides CVI-interventions
 
+# to see some potential changes/history of CVI:
+# Using organizations that have existed earlier in CVI to see changes in shootings overtime.
+
 # dosage
 names(dosage_analysis)
 # define dosage columns
@@ -74,4 +77,4 @@ lm(shootings ~ org + total_pop, data = dosage1)
 # data limitations: If data mapping CVI org creation/establishment is available
 # overtime, I would have been able to test the relationships of changes 
 # CVI orgs established in community areas and its affects on shootings overtime.
-# 
+#

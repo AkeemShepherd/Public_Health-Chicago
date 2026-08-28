@@ -341,6 +341,7 @@ intersection_layer <- intersection_layer %>%
 
 intersection_layer <-
   st_collection_extract(intersection_layer, "POLYGON")
+write.csv(intersection_layer, "File_to_match.csv")
 
   
 # To make a dosage based analysis possible, the model needs
