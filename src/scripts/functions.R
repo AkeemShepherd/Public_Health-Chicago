@@ -1,23 +1,42 @@
-likert_index <- function(data, questions, na.rm = TRUE) {
+
+likert_index <- function(data) {
   
-  # Convert Likert responses to numeric values
-  likert_values <- data[questions] |>
-    lapply(function(x) {
+  likert_labels <- c(
+    "Strongly disagree",
+    "Disagree",
+    "Neither agree nor disagree",
+    "Agree",
+    "Strongly agree"
+  )
+  
+  data[] <- lapply(data, function(x) {
+    
+    # Recode only character columns containing Likert labels
+    if (is.character(x) &&
+        any(x %in% likert_labels, na.rm = TRUE)) {
+      
       dplyr::case_when(
-        #strongly disagree,..., strongly agree scale
         x == "Strongly disagree" ~ 1,
         x == "Disagree" ~ 2,
         x == "Neither agree nor disagree" ~ 3,
         x == "Agree" ~ 4,
         x == "Strongly agree" ~ 5,
-        
-        # Yes/No scale 
-        x == "No" ~ 0, 
-        x == "Yes" ~ 1,
         TRUE ~ NA_real_
       )
-    }) |>
-    as.data.frame()
+      
+    } else {
+      # Preserve respondent IDs and all other 
+      # columns whose values are not categorical
+      x
+    }
+  })
   
-  return(index)
+  return(data)
 }
+
+# index the dataset
+pop_toy_indexed <- likert_index(pop_toy)
+
+# consider using mutate with across to go across different columns instead
+# of lapply 
+# Other - check one note for this. 
